@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>Tv show search</title>
+    <style>
+        #info
+        {
+           background-color: rgb(57, 56, 56);
+        }
+        div
+        {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <section class="container shadow  ">
+        <header class="row bg-dark border border-danger pt-2 p-sm-1 rounded-bottom">
+            <h1 class="col-3 text-center my-4"> <img  width="100%" src="https://themoviesverse.co/wp-content/uploads/moviesverse-202222.png"> </h1>  
+            <form id="searchForm" class="col-9 d-flex shadow">
+                <input type="text" placeholder="TV SHOWS" name="query" id="input" class=" col-md-9 col-9  my-3 rounded">
+                <button class="col-md-3 col-3  my-3 rounded btn btn-success"><span class="fs-1 ">&#128269;</span></button>
+            </form>
+        </header>
+
+        <section class="row d-flex justify-containt-center">
+            <div class="col-3"></div>
+            <div id="image" class="col-sm-12  col-6 border border-danger bg-dark rounded ">
+        
+            </div>
+            <div class="col-3"></div>
+        </section>
+                          <!-- cards -->
+        <section class="row ">
+          <div id="info" class=" col-12 border border-danger  rounded text-dark d-flex flex-wrap text-wrap" >
+
+          </div>
+        </section>
+                            <!-- footers -->
+        <footer class="row">
+            <p class="col-12 border border-danger text-light bg-dark text-center rounded-top ">
+
+                        that's it-thank you
+             </p>
+        </footer>
+    
+                    <!-- javaScript starts -->
+
+    </section>
+    <script >
+    
+        const form = document.querySelector('#searchForm');
+        const input = document.querySelector('#input');
+        const div =  document.querySelector('#image');
+        const info = document.querySelector('#info');
+
+        form.addEventListener('submit', async function(e){
+              e.preventDefault();
+              const searchTerm = form.elements.query.value;
+              try{
+                  const res= await axios.get(`https://api.tvmaze.com/search/shows?q=${searchTerm}`);
+                  addimages(res.data);
+                  
+                } catch(e){
+                    
+                }
+        })
+        
+        const addimages = (shows)=>
+        {
+                for(let i=0; i< info.childElementCount; )
+                {
+                    info.children[i].remove();
+                }
+            for(let result of shows)
+            {
+                  
+                if(result.show.image)
+                {
+                    console.log(result.show.genres[0]);
+                    const img = document.createElement('img');
+                    img.src = result.show.image.medium;
+                    div.append(img);
+
+                    let p = document.createElement('div');
+                    p.classList.add('card-body','text-wrap','border','border-dark',
+                    'border-5','my-3','col-sm-2','col-5','mx-1','bg-dark','shadow');
+                    img.classList.add('card-img-top','btn','p-0','flex-grow-0');
+                    p.appendChild(img);
+                    let h6 = document.createElement('h6');
+                    h6.classList.add('card-text','text-light','col-12','py-2','text-wrap','bg-dark');
+                    h6.style.width = "100%";
+                    h6.innerText = `${result.show.genres[0]},${result.show.genres[1]},${result.show.genres[2]}`;
+                    info.appendChild(p);
+                    p.appendChild(h6);
+                }
+           }
+        }
+
+        </script>
+</body>
+</html>
